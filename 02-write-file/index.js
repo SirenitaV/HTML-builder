@@ -5,6 +5,10 @@ const process = require('process');
 const stdin = process.stdin;
 const stdout = process.stdout;
 
+fs.writeFile(path.join(__dirname, 'usertext.txt'), 'utf-8', (err) => {
+  if (err) throw err;
+});
+
 stdout.write('Hi! Please, write here anything \n');
 stdin.on('data', (data) => {
      data.toString();
