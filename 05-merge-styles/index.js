@@ -6,7 +6,8 @@ fs.readdir(path.join(__dirname, 'project-dist'), (err) => {
   if(err) {
     console.log(err);
   }
-   fs.unlink(path.join(__dirname, 'project-dist', 'bundle.css'), (err) => {
+   //fs.unlink(path.join(__dirname, 'project-dist', 'bundle.css'), (err) => {
+    fs.writeFile(path.join(__dirname, 'project-dist', 'bundle.css'), (err) => {
    if (err) throw err;
    });
 });
@@ -25,7 +26,7 @@ fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, styles) 
           console.log(err);
         }
         else {
-            fs.appendFile(path.join(__dirname, 'project-dist', 'bundle.css'), styles, (err, styles) => {
+          fs.appendFile(path.join(__dirname, 'project-dist', 'bundle.css'), styles, (err, styles) => {
             if(err) throw err;
          });
         }
