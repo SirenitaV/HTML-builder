@@ -31,8 +31,7 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, file) => {
                 fs.writeFile(path.join(__dirname, 'project-dist', 'index.html'), result, (err, result) => {
                   if(err) throw err;
                   else{
-                  //console.log('added into index.html');
-                  }
+                }
                 })
               
               
@@ -47,43 +46,66 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, file) => {
   }
 });
 
+//Copying assets
+
 fs.mkdir(path.join(__dirname, '/project-dist/assets'), {recursive: true}, (err) => {
   if(err) {
     throw err;
   }
-//   fs.readdir(path.join(__dirname, 'assets'), (err, assetscopy) => {
-//     if(err) {
-//       console.log(err);
-//     }
-//   assetscopy.forEach(file => {
-//   // fs.unlink(path.join(__dirname, 'assets', file), (err) => {
-//   //   if (err) throw err;
-//   // });
-//  })
-// });
-// fs.readdir(path.join(__dirname, 'assets'), (err, files) => {
-//     if(err) {
-//       console.log(err);
-//     }
-//     else {      
-//       files.forEach(file => {
-//         fs.copyFile(path.join(__dirname, 'assets', file), path.join(__dirname, '/project-dist/assets', file), (err) => {
-//           if (err) throw err;
-//         });
-//       });
-//     }
-//   });
+
+  if(!'/project-dist/assets') {
+  fs.readdir(path.join(__dirname, '/project-dist/assets'), (err, assetscopy) => {
+    if(err) {
+      console.log(err);
+    }
+  assetscopy.forEach(file => {
+  fs.unlink(path.join(__dirname, '/project-dist/assets', file), (err) => {
+    if (err) throw err;
+  });
+ })
+});
+}
+
+fs.readdir(path.join(__dirname, 'assets'), (err, files) => {
+    if(err) {
+      console.log(err);
+    }
+    else {      
+      files.forEach(folder => {
+        fs.mkdir(path.join(__dirname, `/project-dist/assets/${folder}`), {recursive: true}, (err) => {
+            if(err) {
+              throw err;
+            }
+        fs.readdir(path.join(__dirname, `assets/${folder}`), (err, folderfiles) => {
+          if(err) {
+            console.log(err);
+          }
+      folderfiles.forEach(folderfile => {  
+        fs.copyFile(path.join(__dirname, `assets/${folder}`, folderfile), path.join(__dirname, `/project-dist/assets/${folder}`, folderfile), (err) => {
+          if (err) throw err;
+        });
+       });
+        });
+      });
+      
+    });
+  }
+});
 });
 
-// fs.readdir(path.join(__dirname, 'project-dist'), (err) => {
-//   if(err) {
-//     console.log(err);
-//   }
-//    fs.unlink(path.join(__dirname, 'project-dist', 'style.css'), (err) => {
-//    if (err) throw err;
-//    console.log('no file to unlink');
-//    });
-// });
+//Merging styles
+
+if(!'style.css') {
+  fs.readdir(path.join(__dirname, 'project-dist'), (err) => {
+  if(err) {
+    console.log(err);
+  }
+   fs.unlink(path.join(__dirname, 'project-dist', 'style.css'), (err) => {
+   if (err) throw err;
+   console.log('no file to unlink');
+   });
+});
+}
 
 fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, styles) => {
   if(err) {
@@ -106,4 +128,4 @@ fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, styles) 
     }
   });
 }
-})
+});
