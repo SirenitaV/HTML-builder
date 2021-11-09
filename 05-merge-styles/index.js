@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+if(!'bundle.css') {
 fs.readdir(path.join(__dirname, 'project-dist'), (err) => {
   if(err) {
     console.log(err);
@@ -8,8 +9,8 @@ fs.readdir(path.join(__dirname, 'project-dist'), (err) => {
    fs.unlink(path.join(__dirname, 'project-dist', 'bundle.css'), (err) => {
    if (err) throw err;
    });
-   console.log('deleted bundle.css');
 });
+}
 
 fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, styles) => {
   if(err) {
@@ -24,10 +25,9 @@ fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, styles) 
           console.log(err);
         }
         else {
-          fs.appendFile(path.join(__dirname, 'project-dist', 'bundle.css'), styles, (err, styles) => {
+            fs.appendFile(path.join(__dirname, 'project-dist', 'bundle.css'), styles, (err, styles) => {
             if(err) throw err;
          });
-          console.log('copied to bundle.css');
         }
       });
     }

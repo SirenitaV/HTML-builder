@@ -13,28 +13,97 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, file) => {
   }
   else {
     let template = file;
+    let result;
       fs.readdir(path.join(__dirname, 'components'), (err, components) => {
            if(err) {
            console.log(err);
           }
         else {
           components.forEach(component => {
-            let compArr = [];
+            let part = component.split('.')[0];
             fs.readFile(path.join(__dirname, 'components', component), 'utf-8', (err, component) => {
               if(err) {
                 console.log(err);
               }
-              else {
-              compArr.push(component);
+              else {              
+              result = template.replace(new RegExp(`\\{{${part}}}`), `${component}`);
+              template = result;
+                fs.writeFile(path.join(__dirname, 'project-dist', 'index.html'), result, (err, result) => {
+                  if(err) throw err;
+                  else{
+                  //console.log('added into index.html');
+                  }
+                })
+              
               
               }
-              console.log(compArr.length);
-              //console.log(compArr);
+            
             })
             
-             });
+         });
              
-          }
-         })
+      }
+    })
+  }
+});
+
+fs.mkdir(path.join(__dirname, '/project-dist/assets'), {recursive: true}, (err) => {
+  if(err) {
+    throw err;
+  }
+//   fs.readdir(path.join(__dirname, 'assets'), (err, assetscopy) => {
+//     if(err) {
+//       console.log(err);
+//     }
+//   assetscopy.forEach(file => {
+//   // fs.unlink(path.join(__dirname, 'assets', file), (err) => {
+//   //   if (err) throw err;
+//   // });
+//  })
+// });
+// fs.readdir(path.join(__dirname, 'assets'), (err, files) => {
+//     if(err) {
+//       console.log(err);
+//     }
+//     else {      
+//       files.forEach(file => {
+//         fs.copyFile(path.join(__dirname, 'assets', file), path.join(__dirname, '/project-dist/assets', file), (err) => {
+//           if (err) throw err;
+//         });
+//       });
+//     }
+//   });
+});
+
+// fs.readdir(path.join(__dirname, 'project-dist'), (err) => {
+//   if(err) {
+//     console.log(err);
+//   }
+//    fs.unlink(path.join(__dirname, 'project-dist', 'style.css'), (err) => {
+//    if (err) throw err;
+//    console.log('no file to unlink');
+//    });
+// });
+
+fs.readdir(path.join(__dirname, 'styles'), {withFileTypes: true}, (err, styles) => {
+  if(err) {
+    console.log(err);
+  }
+  else {
+    styles.forEach(style => {
+    let ext = path.extname(path.join(__dirname, 'styles', style.name));
+    if(style.isFile() == true && ext == '.css') {
+      fs.readFile(path.join(__dirname, 'styles', style.name), 'utf-8', (err, styles) => {
+        if(err) {
+          console.log(err);
+        }
+        else {
+          fs.appendFile(path.join(__dirname, 'project-dist', 'style.css'), styles, (err, styles) => {
+            if(err) throw err;
+         });
+        }
+      });
     }
-}); 
+  });
+}
+})
